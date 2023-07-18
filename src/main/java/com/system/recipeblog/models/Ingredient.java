@@ -13,6 +13,11 @@ import java.util.*;
 @Builder
 public class Ingredient {
 
+    /* Model Ingredient
+     * The model is mapped to Model Recipes with a many-to-one relationship
+     * has id as its unique identifier and mapper in the union table
+     * */
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;

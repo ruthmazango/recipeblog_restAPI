@@ -7,6 +7,7 @@ import com.system.recipeblog.repositories.RecipeRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,19 +42,32 @@ public class IngredientServiceImpl implements IngredientService{
         Recipe savedRecipe = recipeRepository.save(recipe);
         return ingredientRepository.save(ingredient);
     }
-
+    //Return All Ingredients in a recipe
     @Override
-    public List<Ingredient> getAllIngredients() {
-        return ingredientRepository.findAll();
+    public List<Ingredient> getAllIngredients(Recipe recipe) {
+        Optional<Recipe> recipeOptional = recipeRepository.findById(recipe.getId());
+        if(!recipeOptional.isPresent()){
+            throw new RuntimeException("Recipe not found for id: " + recipe.getId());
+        }
+        recipe = recipeOptional.get();
+        return new ArrayList<>(recipe.getIngredients());
     }
 
     @Override
     public Optional<Ingredient> findById(Long id) {
+        Optional<Ingredient> ingredientOptional=ingredientRepository.findById(id);
+        if(!ingredientOptional.isPresent()){
+            throw new RuntimeException("Ingredient not found with id: " + id);
+        }
         return ingredientRepository.findById(id);
     }
 
     @Override
     public void deleteIngredient(Long id) {
+        Optional<Ingredient> ingredientOptional=ingredientRepository.findById(id);
+        if(!ingredientOptional.isPresent()){
+            throw new RuntimeException("Ingredient not found with id: " + id);
+        }
         ingredientRepository.deleteById(id);
     }
 }

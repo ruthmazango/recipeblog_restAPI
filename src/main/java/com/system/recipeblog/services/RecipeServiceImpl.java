@@ -45,17 +45,29 @@ public class RecipeServiceImpl implements RecipeService{
     }
 
     @Override
+    public List<Recipe> getRecipesByCategory(Category category) {
+        Optional<Category> categoryOptional = categoryRepository.findById(category.getId());
+        if (!categoryOptional.isPresent()){
+            throw new RuntimeException("Category not found with id: " + category.getId());
+        }
+        category = categoryOptional.get();
+        return (List<Recipe>) category.getRecipes();
+    }
+
+    @Override
     public Optional<Recipe> findById(Long id) {
-        if(!recipeRepository.findById(recipe.getId()).isPresent()){
-            System.out.println("Recipe not found");
-        }return Optional.ofNullable(recipe);
+        Optional<Recipe> recipeOptional = recipeRepository.findById(id);
+        if(!recipeOptional.isPresent()){
+            throw new RuntimeException("Recipe not found with that");
+        }
+        return Optional.ofNullable(recipe);
     }
 
     @Override
     public Recipe updateRecipe(Recipe recipe, Set<Category> categories, Set<Ingredient> ingredients, Long id) {
         Recipe recipe1 = recipeRepository.findById(id).get();
         if(id == null){
-            System.out.println("Recipe does not exist");
+            throw new RuntimeException("Recipe not found with that id");
         } else {
             recipe1.setTitle(recipe.getTitle());
             recipe1.setDescription(recipe.getDescription());
@@ -70,10 +82,10 @@ public class RecipeServiceImpl implements RecipeService{
     @Override
     public void deleteRecipe(Long id) {
 
-        if(recipeRepository.findById(recipe.getId()).isPresent()){
-            recipeRepository.deleteById(id);
-        }else{
-            System.out.println("Recipe not found");
-        } System.out.println("Recipe has been successfully deleted");
+        Optional<Recipe> recipeOptional = recipeRepository.findById(id);
+        if(!recipeOptional.isPresent()){
+            throw new RuntimeException("Recipe not found with id: " + id);
+        }
+        recipeRepository.deleteById(id);
     }
 }

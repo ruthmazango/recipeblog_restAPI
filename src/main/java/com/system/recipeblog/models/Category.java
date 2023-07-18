@@ -12,6 +12,11 @@ import java.util.*;
 @Builder
 public class Category {
 
+    /* Model Category
+     * The model is mapped to Model Recipes with a many-to-many relationship
+     * has id as its unique identifier and mapper in the union table
+     * */
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
